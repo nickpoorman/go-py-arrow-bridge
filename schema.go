@@ -51,27 +51,29 @@ func getPyFieldNames(pySchema *python3.PyObject) ([]*python3.PyObject, error) {
 	}
 
 	length := python3.PyList_Size(pyFieldNames)
-	pyNames := make([]*python3.PyObject, length)
+	pyNames := make([]*python3.PyObject, 0, length)
 	for i := 0; i < length; i++ {
 		pyName := python3.PyList_GetItem(pyFieldNames, i)
 		if pyName == nil {
 			return nil, errors.New("could not get name")
 		}
 		pyName.IncRef()
-		pyNames[i] = pyName
+		// pyNames[i] = pyName
+		pyNames = append(pyNames, pyName)
 	}
 
 	return pyNames, nil
 }
 
 func getFields(pySchema *python3.PyObject, pyFieldNames []*python3.PyObject) ([]arrow.Field, error) {
-	fields := make([]arrow.Field, len(pyFieldNames))
-	for i, pyFieldName := range pyFieldNames {
+	fields := make([]arrow.Field, 0, len(pyFieldNames))
+	for _, pyFieldName := range pyFieldNames {
 		field, err := getField(pySchema, pyFieldName)
 		if err != nil {
 			return nil, err
 		}
-		fields[i] = *field
+		// fields[i] = *field
+		fields = append(fields, *field)
 	}
 	return fields, nil
 }

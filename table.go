@@ -46,7 +46,7 @@ func PyTableToColumns(pyTable *python3.PyObject) (*arrow.Schema, []array.Column,
 // PyTableToColumns returns the columns in the pyarrow table.
 func PyTableToColumnsWithSchema(pyTable *python3.PyObject, schema *arrow.Schema) ([]array.Column, error) {
 	fields := schema.Fields()
-	columns := make([]array.Column, len(fields))
+	columns := make([]array.Column, 0, len(fields))
 
 	for i := range fields {
 		pyColumn, err := PyTableGetPyColumn(pyTable, fields[i].Name)
@@ -59,7 +59,8 @@ func PyTableToColumnsWithSchema(pyTable *python3.PyObject, schema *arrow.Schema)
 		if err != nil {
 			return nil, err
 		}
-		columns[i] = *col
+		// columns[i] = *col
+		columns = append(columns, *col)
 	}
 
 	return columns, nil

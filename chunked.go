@@ -32,13 +32,14 @@ func PyChunkedToChunks(pyChunked *python3.PyObject, dtype arrow.DataType) ([]arr
 	}
 
 	length := python3.PyList_Size(pyChunks)
-	chunks := make([]array.Interface, length)
+	chunks := make([]array.Interface, 0, length)
 	for i := 0; i < length; i++ {
 		chunk, err := PyChunksGetChunk(pyChunks, i, dtype)
 		if err != nil {
 			return nil, err
 		}
-		chunks[i] = chunk
+		// chunks[i] = chunk
+		chunks = append(chunks, chunk)
 	}
 
 	return chunks, nil

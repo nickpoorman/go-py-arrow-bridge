@@ -15,13 +15,14 @@ func PyBuffersToBuffers(pyBuffers *python3.PyObject) ([]*memory.Buffer, error) {
 	}
 
 	length := python3.PyList_Size(pyBuffers)
-	buffers := make([]*memory.Buffer, length)
+	buffers := make([]*memory.Buffer, 0, length)
 	for i := 0; i < length; i++ {
 		buffer, err := PyBuffersGetBuffer(pyBuffers, i)
 		if err != nil {
 			return nil, err
 		}
-		buffers[i] = buffer
+		// buffers[i] = buffer
+		buffers = append(buffers, buffer)
 	}
 
 	return buffers, nil

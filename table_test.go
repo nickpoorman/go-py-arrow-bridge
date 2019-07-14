@@ -12,7 +12,7 @@ import (
 )
 
 func BenchmarkAll(b *testing.B) {
-	for i := 0; i <= 10; i += 2 {
+	for i := 5; i <= 10; i += 2 {
 		b.Run(fmt.Sprintf("BenchmarkZeroCopy_%d", i), zeroCopyBenchmarkN(i))
 	}
 	for i := 1000; i <= 10000; i += 500 {
@@ -31,8 +31,12 @@ func BenchmarkAll(b *testing.B) {
 // So the benchmarks don't get compiled out during optimization.
 var benchTable array.Table
 
-func zeroCopyBenchmarkN(chunks int) func(b *testing.B) {
+func zeroCopyBenchmarkN(numChunks int) func(b *testing.B) {
 	return func(b *testing.B) {
+		if numChunks <= 0 {
+			b.Fatal("numChunks must be greater than zero")
+		}
+
 		py := pytasks.GetPythonSingleton()
 
 		fooModule, err := py.ImportModule("foo")
@@ -50,7 +54,12 @@ func zeroCopyBenchmarkN(chunks int) func(b *testing.B) {
 
 		var pyTable *python3.PyObject
 		taskErr := py.NewTaskSync(func() {
-			pyTable = genPyTable(fooModule)
+			pyNumChunks := python3.PyLong_FromLong(numChunks)
+			defer pyNumChunks.DecRef()
+			pyTable = CallPyFunc(fooModule, "zero_copy_chunks", pyNumChunks)
+			if pyTable == nil {
+				b.Fatal("pyTable is nil")
+			}
 		})
 		if taskErr != nil {
 			b.Fatal(taskErr)
