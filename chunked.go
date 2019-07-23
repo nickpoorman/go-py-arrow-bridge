@@ -36,9 +36,9 @@ func PyChunkedToChunks(pyChunked *python3.PyObject, dtype arrow.DataType) ([]arr
 	for i := 0; i < length; i++ {
 		chunk, err := PyChunksGetChunk(pyChunks, i, dtype)
 		if err != nil {
+			// TODO: Should release any chunks we've already got.
 			return nil, err
 		}
-		// chunks[i] = chunk
 		chunks = append(chunks, chunk)
 	}
 

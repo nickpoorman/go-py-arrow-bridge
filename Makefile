@@ -13,7 +13,7 @@ DIST_DIR=bin
 
 GO_SOURCES := $(shell find . -path -prune -o -name '*.go' -not -name '*_test.go')
 
-.PHONY: default clean clean-cache test test-no-cache bench build run prof ci
+.PHONY: default clean clean-cache test test-no-cache bench build run prof ci ci-test docker
 
 #
 # Our default target, clean up, do our install, test, and build locally.
@@ -72,6 +72,9 @@ prof:
 ci:
 	docker build -f Dockerfile.ci .
 
-ci-test:
-	LD_LIBRARY_PATH=/miniconda/lib PKG_CONFIG_PATH=/miniconda/lib/pkgconfig go test -v ./...
-	
+docker:
+	docker build . -t go-py-arrow-bridge:builder
+	docker run \
+		-v $(PWD):/src/go-py-arrow-bridge \
+		-it --workdir=/src/go-py-arrow-bridge/ \
+		go-py-arrow-bridge:builder
