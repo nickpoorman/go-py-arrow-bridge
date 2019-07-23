@@ -29,7 +29,7 @@ See the [example](cmd/example/example.go) or clone down the repo an run it via `
 
 As you can see below, the amount of time to move data across the Python/Go language boundary stays constant as the number of elements increases.
 
-However, as the number of chunks increase, the amount of time also increases. I believe this is due to the large number of CGO calls happening in loops. One solution might be to implement the schema data being gathered in C to reduce the number of CGO calls. A simple solution for this could be to compress your table down to a single chunk before crossing the language boundry.
+However, as the number of chunks increase, the amount of time also increases. I believe this is due to the large number of CGO calls happening in loops. A future version might be to reduce the number of CGO calls by implementing the schema data gathering in C. In the meantime, A workaround might be to compress the table down to a single chunk before crossing the language boundary.
 
 These results are from my Mid 2012 MacBook Air (1.8GHz i5 / 8 GB 1600 MHz DDR3).
 
