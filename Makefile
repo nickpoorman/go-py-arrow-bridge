@@ -71,3 +71,7 @@ prof:
 
 ci:
 	docker build -f Dockerfile.ci .
+
+ci-test:
+	LD_LIBRARY_PATH=/miniconda/lib PKG_CONFIG_PATH=/miniconda/lib/pkgconfig go test -v ./...
+	

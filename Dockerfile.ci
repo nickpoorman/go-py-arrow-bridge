@@ -31,4 +31,4 @@ ENV LD_LIBRARY_PATH=/miniconda/lib
 
 WORKDIR /src/go-py-arrow-bridge
 COPY . .
-RUN make test
+RUN make ci-test
