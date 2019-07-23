@@ -13,7 +13,7 @@ DIST_DIR=bin
 
 GO_SOURCES := $(shell find . -path -prune -o -name '*.go' -not -name '*_test.go')
 
-.PHONY: default clean clean-cache test test-no-cache bench build run 
+.PHONY: default clean clean-cache test test-no-cache bench build run prof ci
 
 #
 # Our default target, clean up, do our install, test, and build locally.
@@ -68,3 +68,6 @@ run: clean build
 prof:
 	$(GO_TEST) -bench=. -run=- -cpuprofile cpu.prof $(GO_TEST_ARGS)
 	go tool pprof -svg cpu.prof > cpu.svg
+
+ci:
+	docker build -f Dockerfile.ci .
