@@ -61,3 +61,10 @@ build:
 #
 run: clean build
 	${GO_PREFIX} ./bin/example
+
+#
+# Generate prof reports.
+#
+prof:
+	$(GO_TEST) -bench=. -run=- -cpuprofile cpu.prof $(GO_TEST_ARGS)
+	go tool pprof -svg cpu.prof > cpu.svg

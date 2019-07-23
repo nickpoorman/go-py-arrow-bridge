@@ -4,3 +4,5 @@ bin/
 vendor/
 __pycache__/
 .vscode/
+cpu.svg
+cpu.prof
